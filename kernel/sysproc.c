@@ -7,6 +7,29 @@
 #include "proc.h"
 #include "vm.h"
 
+uint64 sys_square(void){
+	int i;
+	argint(0,&i);
+	return i*i;
+}
+
+
+
+uint64 sys_get_child_count(void){
+	return myproc()->child_count;
+}
+
+uint64
+sys_get_process_child_count(void)
+{
+    int pid;
+
+    argint(0, &pid); 
+
+    return get_process_child_count_pid(pid);
+}
+
+
 uint64
 sys_exit(void)
 {
@@ -21,6 +44,14 @@ sys_getpid(void)
 {
   return myproc()->pid;
 }
+
+
+uint64
+sys_getppid(void){
+  struct proc *p=myproc();
+  return p->parent->pid; 
+}
+
 
 uint64
 sys_fork(void)

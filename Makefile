@@ -126,6 +126,16 @@ mkfs/mkfs: mkfs/mkfs.c $K/fs.h $K/param.h
 .PRECIOUS: %.o
 
 UPROGS=\
+       	$U/_test_children\
+       	$U/_sq\
+       	$U/_ppid\
+        $U/_mgrep\
+       	$U/_cp\
+       	$U/_cmd\
+       	$U/_clear\
+       	$U/_tail\
+	$U/_head\
+       	$U/_hello\
 	$U/_cat\
 	$U/_echo\
 	$U/_forktest\
@@ -147,8 +157,8 @@ UPROGS=\
 	$U/_dorphan\
 	$U/_sync\
 
-fs.img: mkfs/mkfs README $(UPROGS)
-	mkfs/mkfs fs.img README $(UPROGS)
+fs.img: mkfs/mkfs README file.txt $(UPROGS)
+	mkfs/mkfs fs.img README file.txt $(UPROGS)
 
 -include kernel/*.d user/*.d
 

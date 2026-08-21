@@ -110,7 +110,6 @@ static struct proc *
 allocproc(void)
 {
   struct proc *p;
-
   for (p = proc; p < &proc[NPROC]; p++) {
     acquire(&p->lock);
     if (p->state == UNUSED) {
@@ -122,6 +121,7 @@ allocproc(void)
   return 0;
 
 found:
+  p->child_count=0;
   p->pid = allocpid();
   p->state = USED;
 
@@ -167,6 +167,7 @@ freeproc(struct proc *p)
   p->chan = 0;
   p->killed = 0;
   p->xstate = 0;
+  p->child_count=0;
   p->state = UNUSED;
 }
 
@@ -296,7 +297,9 @@ kfork(void)
   acquire(&wait_lock);
   np->parent = p;
   release(&wait_lock);
-
+  acquire(&p->lock);
+  p->child_count++;
+  release(&p->lock);
   acquire(&np->lock);
   np->state = RUNNABLE;
   release(&np->lock);
@@ -366,6 +369,33 @@ kexit(int status)
 
 // Wait for a child process to exit and return its pid.
 // Return -1 if this process has no children.
+
+int
+get_process_child_count_pid(int pid)
+{
+    struct proc *p;
+
+    for(p = proc; p < &proc[NPROC]; p++){
+        acquire(&p->lock);
+
+        if(p->pid == pid){
+            int cnt = p->child_count;
+            release(&p->lock);
+            return cnt;
+        }
+
+        release(&p->lock);
+    }
+
+    return -1;
+}	
+	
+	
+	
+	
+	
+	
+	
 int
 kwait(uint64 addr)
 {
@@ -396,6 +426,9 @@ kwait(uint64 addr)
           }
           pp->parent = 0;
           freeproc(pp);
+	  acquire(&p->lock);
+          p->child_count--;
+	  release(&p->lock);
           release(&pp->lock);
           release(&wait_lock);
           return pid;
