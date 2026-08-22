@@ -38,6 +38,8 @@ int             get_process_child_count_pid(int pid);
 int             nfork(int n,int *addr);
 int             print_syscalls(void); // for current process
 int             print_process_syscalls(int pid);
+uint64          sys_get_inode_num(void);
+uint64          sys_get_read_offset(void);
 // fs.c
 void            fsinit(int);
 int             dirlink(struct inode*, char*, uint);

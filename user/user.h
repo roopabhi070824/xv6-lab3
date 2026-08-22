@@ -46,6 +46,10 @@ int square(int);
 int nfork(int, int *);
 int print_syscalls(void); 
 int print_process_syscalls(int pid);
+uint64 get_inode_num(int fd);
+uint64 get_read_offset(int fd);
+
+
 // printf.c
 void fprintf(int, const char *, ...) __attribute__((format(printf, 2, 3)));
 void printf(const char *, ...) __attribute__((format(printf, 1, 2)));

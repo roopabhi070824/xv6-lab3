@@ -50,3 +50,5 @@ entry("get_child_count");
 entry("nfork");
 entry("print_syscalls");
 entry("print_process_syscalls");
+entry("get_inode_num");
+entry("get_read_offset");

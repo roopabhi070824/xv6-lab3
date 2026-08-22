@@ -16,6 +16,8 @@
 #include "file.h"
 #include "fcntl.h"
 
+
+
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
 static int
@@ -508,4 +510,39 @@ sys_pipe(void)
     return -1;
   }
   return 0;
+}
+
+
+uint64
+sys_get_inode_num(void)
+{
+    struct file *f;
+
+    if(argfd(0, 0, &f) < 0)
+        return -1;
+
+    if(f->type != FD_INODE)
+        return -1;
+
+    if(f->readable == 0)
+        return -1;
+
+    return f->ip->inum;
+}
+
+uint64
+sys_get_read_offset(void)
+{
+    struct file *f;
+
+    if(argfd(0, 0, &f) < 0)
+        return -1;
+
+    if(f->type != FD_INODE)
+        return -1;
+
+    if(f->readable == 0)
+        return -1;
+
+    return f->off;
 }
