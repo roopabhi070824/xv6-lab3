@@ -34,7 +34,10 @@ void            fileinit(void);
 int             fileread(struct file*, uint64, int n);
 int             filestat(struct file*, uint64 addr);
 int             filewrite(struct file*, uint64, int n);
-int get_process_child_count_pid(int pid);
+int             get_process_child_count_pid(int pid);
+int             nfork(int n,int *addr);
+int             print_syscalls(void); // for current process
+int             print_process_syscalls(int pid);
 // fs.c
 void            fsinit(int);
 int             dirlink(struct inode*, char*, uint);

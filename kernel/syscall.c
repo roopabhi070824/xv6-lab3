@@ -107,6 +107,10 @@ extern uint64 sys_getppid(void);
 extern uint64 sys_square(void);
 extern uint64 sys_get_child_count(void);
 extern uint64 sys_get_process_child_count(void);
+extern uint64 sys_nfork(void);
+extern uint64 sys_print_process_syscalls(void);
+
+extern uint64 sys_print_syscalls(void);
 // An array mapping syscall numbers from syscall.h
 // to the function that handles the system call.
 static uint64 (*syscalls[])(void) = {
@@ -136,7 +140,11 @@ static uint64 (*syscalls[])(void) = {
   [SYS_getppid] sys_getppid,
   [SYS_square]  sys_square,
   [SYS_get_child_count] sys_get_child_count,
-  [SYS_get_process_child_count] sys_get_process_child_count
+  [SYS_get_process_child_count] sys_get_process_child_count,
+  [SYS_nfork]   sys_nfork,
+  [SYS_print_process_syscalls] sys_print_process_syscalls,
+  [SYS_print_syscalls] sys_print_syscalls
+
   // clang-format on
 };
 
@@ -150,6 +158,7 @@ syscall(void)
   if (num > 0 && num < NELEM(syscalls) && syscalls[num]) {
     // Use num to lookup the system call function for num, call it,
     // and store its return value in p->trapframe->a0
+    p->syscall_count[num]++;
     p->trapframe->a0 = syscalls[num]();
   } else {
     printk("%d %s: unknown sys call %d\n", p->pid, p->name, num);

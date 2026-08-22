@@ -47,3 +47,6 @@ entry("getppid");
 entry("square");
 entry("get_process_child_count");
 entry("get_child_count");
+entry("nfork");
+entry("print_syscalls");
+entry("print_process_syscalls");

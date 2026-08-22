@@ -7,13 +7,69 @@
 #include "proc.h"
 #include "vm.h"
 
+
 uint64 sys_square(void){
 	int i;
 	argint(0,&i);
 	return i*i;
 }
 
+uint64 sys_nfork(void){
+  int n;
+  argint(0,&n);
+  uint64 addr;
+  int a[100];
+  argaddr(1,&addr);
+  for(int i=0;i<n;i++){
+    int pid=kfork();
+    if(pid==0){
+      return 0;
+    }
+    else if(pid<0){
+      return -1;
+    }
+    a[i]=pid;
+  }
+  if(copyout(myproc()->pagetable,myproc()->sz,addr,(char *)a,n*sizeof(int))<0){
+    return -1;
+  }
+  return n;
+}
 
+uint64 sys_print_syscalls(void){
+   struct proc *p= myproc();
+   printk("Syscall counts for current process:\n");
+    printk("syscall_number invocations\n");
+    for(int i=1;i<SYS_MAX;i++){
+      if(p->syscall_count[i]>0){
+      printk("%d %ld\n",i,p->syscall_count[i]);
+    }
+  }
+    return 0;
+}
+
+
+uint64 sys_print_process_syscalls(void){
+  struct proc *p;
+  int pid;
+  argint(0,&pid);
+  for(p=proc;p<&proc[NPROC];p++){
+    acquire(&p->lock);
+    if(p->pid==pid){
+      printk("Syscall counts for pid %d\n",p->pid);
+      printk("syscall_numberinvocations\n");
+      for(int i=0;i<SYS_MAX;i++){
+         if(p->syscall_count[i]>0){
+        printk("%d %ld\n",i,p->syscall_count[i]);
+      }
+    }
+      release(&p->lock);
+      return 0;
+    }
+  }
+  return -1;
+
+}
 
 uint64 sys_get_child_count(void){
 	return myproc()->child_count;

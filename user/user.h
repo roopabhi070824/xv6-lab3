@@ -43,6 +43,9 @@ void *memcpy(void *, const void *, uint);
 char *sbrk(int);
 char *sbrklazy(int);
 int square(int);
+int nfork(int, int *);
+int print_syscalls(void); 
+int print_process_syscalls(int pid);
 // printf.c
 void fprintf(int, const char *, ...) __attribute__((format(printf, 2, 3)));
 void printf(const char *, ...) __attribute__((format(printf, 1, 2)));
