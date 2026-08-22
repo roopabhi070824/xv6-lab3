@@ -40,6 +40,7 @@ int             print_syscalls(void); // for current process
 int             print_process_syscalls(int pid);
 uint64          sys_get_inode_num(void);
 uint64          sys_get_read_offset(void);
+int             peek2(void);
 // fs.c
 void            fsinit(int);
 int             dirlink(struct inode*, char*, uint);

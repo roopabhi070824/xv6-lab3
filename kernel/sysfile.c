@@ -546,3 +546,30 @@ sys_get_read_offset(void)
 
     return f->off;
 }
+
+
+uint64 sys_peek2(void){
+    struct file *f;
+    uint64 user_addr;
+    int num_bytes;
+    int r;
+    if(argfd(0,0,&f)<0){
+      return -1;
+    }
+    argaddr(1,&user_addr);
+    argint(2,&num_bytes);
+    if(f->type!=FD_INODE){
+      return -1;
+    }
+    if(f->readable==0){
+      return -1;
+    }
+    ilock(f->ip);
+    r=readi(f->ip,1,user_addr,f->off,num_bytes);
+    iunlock(f->ip);
+    if(r==0){
+      return -2;
+    }
+    return r;
+
+}

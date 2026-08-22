@@ -48,7 +48,7 @@ int print_syscalls(void);
 int print_process_syscalls(int pid);
 uint64 get_inode_num(int fd);
 uint64 get_read_offset(int fd);
-
+int peek2(int fd,char* user_addr,int num_bytes);
 
 // printf.c
 void fprintf(int, const char *, ...) __attribute__((format(printf, 2, 3)));

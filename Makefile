@@ -126,6 +126,7 @@ mkfs/mkfs: mkfs/mkfs.c $K/fs.h $K/param.h
 .PRECIOUS: %.o
 
 UPROGS=\
+		$U/_test_peek\
 		$U/_test_fd\
 		$U/_test_syscalls\
 		$U/_test_nfork\
